@@ -135,9 +135,10 @@ def init_db(app):
 
     # Admin foydalanuvchisini yaratish
     admin_username = app.config.get('ADMIN_USERNAME', 'admin')
+
     admin_pw_hash  = app.config.get('ADMIN_PASSWORD_HASH', '')
 
-    if not User.query.filter_by(username=admin_username).first():
+    if not User.query.filter_by(email="admin@nullctf.uz").first():
         admin = User(
             username   = admin_username,
             email      = 'admin@nullctf.uz',
