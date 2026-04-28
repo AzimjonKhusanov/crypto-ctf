@@ -35,4 +35,4 @@ ENV DATABASE_URL=sqlite:////app/data/nullctf.db
 ENV ADMIN_USERNAME=admin
 
 # Ishga tushirish
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "60", "run:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "60", "run:app"]
