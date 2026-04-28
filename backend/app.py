@@ -60,7 +60,12 @@ def create_app(config=None):
 
     # ── Bazani yaratish va seed data qo'shish ───────────────────────────────
     with app.app_context():
-        db.create_all()
-        init_db(app)
+    	db.create_all()
+
+    # faqat DB bo'sh bo'lsa seed qilamiz
+    	from .models.database import User
+
+    	if User.query.count() == 0:
+        	init_db(app)
 
     return app
