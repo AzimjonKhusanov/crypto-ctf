@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}{% if challenge %}Challenge tahrirlash{% else %}Yangi Challenge{% endblock %}
+{% block content %}
+<div class="container" style="max-width:760px;">
+  <div class="page-header">
+    <h1 class="page-title">{% if challenge %}Challenge tahrirlash{% else %}Yangi Challenge{% endif %}</h1>
+  </div>
+
+  <div class="card">
+    <form method="POST">
+      <div class="form-group">
+        <label class="form-label">Nomi *</label>
+        <input type="text" name="title" class="form-control" required
+               value="{{ challenge.title if challenge else '' }}" placeholder="Masala nomi">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tavsif (HTML qo'llab-quvvatlanadi) *</label>
+        <textarea name="description" class="form-control" required rows="6"
+                  placeholder="Masala tavsifi...">{{ challenge.description if challenge else '' }}</textarea>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+        <div class="form-group">
+          <label class="form-label">Kategoriya *</label>
+          <select name="category" class="form-control" required>
+            {% for cat in ['RSA', 'AES', 'XOR', 'Hashing', 'Encoding', 'Caesar', 'Vigenere',
+                           'Classical', 'Math', 'DH', 'Asymmetric', 'Stream', 'Steganography',
+                           'Web', 'Transposition', 'Misc'] %}
+            <option value="{{ cat }}"
+              {% if challenge and challenge.category == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Qiyinlik *</label>
+          <select name="difficulty" class="form-control" required>
+            <option value="oson"  {% if challenge and challenge.difficulty == 'oson'  %}selected{% endif %}>Oson</option>
+            <option value="o'rta" {% if challenge and challenge.difficulty == "o'rta" %}selected{% endif %}>O'rta</option>
+            <option value="qiyin" {% if challenge and challenge.difficulty == 'qiyin' %}selected{% endif %}>Qiyin</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Ball *</label>
+          <input type="number" name="points" class="form-control" min="10" max="1000" step="25"
+                 value="{{ challenge.points if challenge else 100 }}" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Flag (NULL{...} formatida) *</label>
+        <input type="text" name="flag" class="form-control" required
+               value="{{ challenge.flag if challenge else 'NULL{' }}"
+               placeholder="NULL{flag_here}" style="font-family:var(--mono); color:var(--green);">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Maslahat (ixtiyoriy)</label>
+        <textarea name="hint" class="form-control" rows="2"
+                  placeholder="O'yinchilarga yordam beruvchi maslahat...">{{ challenge.hint if challenge else '' }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap:.5rem; cursor:pointer;">
+          <input type="checkbox" name="is_active"
+                 {% if not challenge or challenge.is_active %}checked{% endif %}
+                 style="width:16px; height:16px; accent-color:var(--green);">
+          <span style="font-size:.9rem; color:var(--text-secondary);">Faol (o'yinchilarga ko'rinadi)</span>
+        </label>
+      </div>
+
+      <div style="display:flex; gap:.75rem; margin-top:1.5rem;">
+        <button type="submit" class="btn btn-primary">
+          {% if challenge %}Saqlash{% else %}Yaratish{% endif %}
+        </button>
+        <a href="{{ url_for('admin.challenges') }}" class="btn btn-ghost">Bekor qilish</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

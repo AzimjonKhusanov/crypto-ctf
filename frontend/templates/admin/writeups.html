@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Admin — Writeuplar{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <h1 class="page-title">📄 Writeuplar</h1>
+        <p class="page-subtitle">{{ writeups|length }} ta</p>
+      </div>
+      <a href="{{ url_for('admin.new_writeup') }}" class="btn btn-primary">+ Yangi Writeup</a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Sarlavha</th><th>Masala</th><th>Muallif</th><th>Holat</th><th>Sana</th></tr>
+        </thead>
+        <tbody>
+          {% for wu in writeups %}
+          <tr>
+            <td style="font-weight:600;">
+              <a href="{{ url_for('writeups.detail', writeup_id=wu.id) }}">{{ wu.title }}</a>
+            </td>
+            <td style="color:var(--text-muted); font-size:.85rem;">{{ wu.challenge.title }}</td>
+            <td style="color:var(--text-muted);">{{ wu.author }}</td>
+            <td>
+              {% if wu.is_active %}
+              <span style="color:var(--green); font-size:.85rem;">Faol</span>
+              {% else %}
+              <span style="color:var(--text-muted); font-size:.85rem;">Nofaol</span>
+              {% endif %}
+            </td>
+            <td style="font-family:var(--mono); font-size:.78rem; color:var(--text-muted);">
+              {{ wu.created_at.strftime('%d.%m.%Y') }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

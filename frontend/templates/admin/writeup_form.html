@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Yangi Writeup{% endblock %}
+{% block content %}
+<div class="container" style="max-width:760px;">
+  <div class="page-header">
+    <h1 class="page-title">📄 Yangi Writeup</h1>
+  </div>
+  <div class="card">
+    <form method="POST">
+      <div class="form-group">
+        <label class="form-label">Masala *</label>
+        <select name="challenge_id" class="form-control" required>
+          {% for ch in challenges %}
+          <option value="{{ ch.id }}"
+            {% if writeup and writeup.challenge_id == ch.id %}selected{% endif %}>
+            {{ ch.title }} ({{ ch.category }})
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sarlavha *</label>
+        <input type="text" name="title" class="form-control" required
+               value="{{ writeup.title if writeup else '' }}"
+               placeholder="Writeup sarlavhasi">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Muallif</label>
+        <input type="text" name="author" class="form-control"
+               value="{{ writeup.author if writeup else current_user.username }}"
+               placeholder="Muallif nomi">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kontent (Markdown) *</label>
+        <textarea name="content" class="form-control" required rows="20"
+                  placeholder="## Masala tahlili&#10;&#10;...&#10;&#10;## Yechim&#10;&#10;```python&#10;# kod&#10;```&#10;&#10;## Flag&#10;&#10;```&#10;NULL{flag}&#10;```"
+                  style="font-family:var(--mono); font-size:.85rem;">{{ writeup.content if writeup else '' }}</textarea>
+      </div>
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap:.5rem; cursor:pointer;">
+          <input type="checkbox" name="is_active"
+                 {% if not writeup or writeup.is_active %}checked{% endif %}
+                 style="width:16px; height:16px; accent-color:var(--green);">
+          <span style="font-size:.9rem; color:var(--text-secondary);">Faol</span>
+        </label>
+      </div>
+      <div style="display:flex; gap:.75rem; margin-top:1.5rem;">
+        <button type="submit" class="btn btn-primary">Saqlash</button>
+        <a href="{{ url_for('admin.writeups') }}" class="btn btn-ghost">Bekor qilish</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

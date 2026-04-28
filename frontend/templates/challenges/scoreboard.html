@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Scoreboard{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">🏆 Scoreboard</h1>
+    <p class="page-subtitle">Top o'yinchilar reytingi</p>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Foydalanuvchi</th>
+            <th>Ball</th>
+            <th>Hal qilingan</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr class="{% if loop.index <= 3 %}rank-{{ loop.index }}{% endif %}">
+            <td style="font-family:var(--mono); width:50px;">
+              {% if loop.index == 1 %}🥇
+              {% elif loop.index == 2 %}🥈
+              {% elif loop.index == 3 %}🥉
+              {% else %}{{ loop.index }}{% endif %}
+            </td>
+            <td style="font-weight:600;">
+              {{ u.username }}
+              {% if u.is_admin %}<span class="badge" style="background:rgba(176,96,255,.15);color:var(--purple);border:1px solid rgba(176,96,255,.3);">admin</span>{% endif %}
+            </td>
+            <td style="font-family:var(--mono); color:var(--green);">{{ u.score }}</td>
+            <td style="color:var(--text-muted); font-family:var(--mono);">{{ u.solved_challenges()|length }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:2rem;">Hali ball to'planmagan</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

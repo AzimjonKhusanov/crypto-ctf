@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block title %}NullCTF — Bosh sahifa{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-eyebrow">// O'zbek kriptografiya platformasi</p>
+    <h1 class="hero-title">
+      <span class="hl-green">Kriptografiyani</span><br>
+      <span class="hl-cyan">O'zbek tilida</span> o'rgan
+    </h1>
+    <p class="hero-desc">
+      CTF uslubidagi challengelar, to'liq darslar va writeuplar bilan
+      kriptografiyani boshlang'ichdan professional darajaga o'rgan.
+    </p>
+    <div class="hero-actions">
+      <a href="{{ url_for('challenges.challenges_list') }}" class="btn btn-primary btn-lg">
+        Challengelarni ko'rish →
+      </a>
+      <a href="{{ url_for('academy.index') }}" class="btn btn-outline btn-lg">
+        Academy
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">{{ total_challenges }}+</div>
+        <div class="stat-label">Challenge</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">10</div>
+        <div class="stat-label">Dars</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">{{ total_users }}</div>
+        <div class="stat-label">O'yinchi</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMINAL DEMO -->
+  <section style="max-width:700px; margin:0 auto 4rem;">
+    <div class="terminal animate-in">
+      <div class="terminal-header">
+        <span class="terminal-dot t-red"></span>
+        <span class="terminal-dot t-yellow"></span>
+        <span class="terminal-dot t-green"></span>
+        <span class="terminal-title">nullctf@kali:~$</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">❯ </span><span class="t-cmd">python3 solve.py</span></div>
+        <div class="t-out">[*] Flag format: NULL{...}</div>
+        <div class="t-out">[*] Shifrlangan matn tahlil qilinmoqda...</div>
+        <div class="t-out">[*] XOR kalit topildi: 0x42</div>
+        <div class="t-out">[*] Deshifrlash:</div>
+        <div><span class="t-flag">NULL{W3lc0m3_t0_NullCTF}</span></div>
+        <div class="t-out">[+] Flag muvaffaqiyatli topildi! +50 ball</div>
+        <div style="margin-top:.5rem"><span class="t-prompt">❯ </span><span class="t-cmd" style="animation: blink 1s step-end infinite;">_</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KATEGORIYALAR -->
+  <section style="margin-bottom:4rem;">
+    <h2 style="font-size:1.4rem; font-weight:800; margin-bottom:1.5rem; color:var(--cyan);">
+      // Kategoriyalar
+    </h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:1rem;">
+      {% set cats = [
+        ('RSA', '🔐', '#ff4455'),
+        ('AES', '🔒', '#00d4ff'),
+        ('XOR', '⊕', '#00ff88'),
+        ('Hashing', '#', '#ffd700'),
+        ('Encoding', '📝', '#b060ff'),
+        ('Caesar', 'C', '#ff8c00'),
+        ('Classical', '📜', '#00cc6a'),
+        ('Math', '∑', '#00d4ff'),
+      ] %}
+      {% for name, icon, color in cats %}
+      <a href="{{ url_for('challenges.challenges_list') }}?category={{ name }}"
+         style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg);
+                padding:1.25rem; text-align:center; display:block; transition:all .2s; color:inherit;
+                text-decoration:none;"
+         onmouseover="this.style.borderColor='{{ color }}'; this.style.boxShadow='0 0 16px {{ color }}22'"
+         onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none'">
+        <div style="font-size:1.75rem; margin-bottom:.4rem;">{{ icon }}</div>
+        <div style="font-weight:700; font-size:.9rem; color:{{ color }};">{{ name }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- 2 ustunli: TOP + OXIRGI YECHIMLAR -->
+  <div class="grid-2" style="margin-bottom:4rem;">
+
+    <!-- Top o'yinchilar -->
+    <div class="card">
+      <h3 style="font-size:1rem; font-weight:700; color:var(--yellow); margin-bottom:1.25rem;">
+        🏆 Top O'yinchilar
+      </h3>
+      {% if top_users %}
+      <div style="display:flex; flex-direction:column; gap:.5rem;">
+        {% for u in top_users %}
+        <div style="display:flex; align-items:center; gap:.75rem; padding:.6rem .5rem;
+                    border-radius:var(--radius); background:var(--bg-surface);">
+          <span style="font-family:var(--mono); font-size:.8rem; color:var(--text-muted); width:20px; text-align:right;">
+            {{ loop.index }}
+          </span>
+          <span style="flex:1; font-weight:600;">{{ u.username }}</span>
+          <span style="font-family:var(--mono); color:var(--green); font-size:.9rem;">{{ u.score }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <a href="{{ url_for('challenges.scoreboard') }}" class="btn btn-ghost btn-sm" style="width:100%; margin-top:1rem;">
+        To'liq scoreboard →
+      </a>
+      {% else %}
+      <p style="color:var(--text-muted); font-size:.9rem;">Hali ball to'planmagan. Birinchi bo'ling!</p>
+      {% endif %}
+    </div>
+
+    <!-- Oxirgi yechimlar -->
+    <div class="card">
+      <h3 style="font-size:1rem; font-weight:700; color:var(--cyan); margin-bottom:1.25rem;">
+        ⚡ Oxirgi Yechimlar
+      </h3>
+      {% if recent_solves %}
+      <div style="display:flex; flex-direction:column; gap:.5rem;">
+        {% for sub in recent_solves %}
+        <div style="display:flex; align-items:center; gap:.75rem; padding:.5rem;
+                    border-radius:var(--radius);">
+          <span style="color:var(--green); font-size:.75rem;">✓</span>
+          <span style="flex:1; font-size:.85rem; color:var(--text-secondary);">
+            <strong style="color:var(--text-primary);">{{ sub.user.username }}</strong>
+            → {{ sub.challenge.title }}
+          </span>
+          <span style="font-size:.72rem; color:var(--text-muted); font-family:var(--mono);">
+            +{{ sub.challenge.points }}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p style="color:var(--text-muted); font-size:.9rem;">Hali yechim yo'q.</p>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- ACADEMY PROMO -->
+  <section style="margin-bottom:4rem;">
+    <div class="card" style="background: linear-gradient(135deg, rgba(0,255,136,.05) 0%, rgba(0,212,255,.05) 100%);
+                              border-color: rgba(0,255,136,.2);">
+      <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap;">
+        <div style="flex:1; min-width:200px;">
+          <h2 style="font-size:1.5rem; font-weight:800; margin-bottom:.75rem;">
+            📚 Academy — To'liq Darslar
+          </h2>
+          <p style="color:var(--text-secondary); margin-bottom:1.25rem;">
+            Base64 dan RSA gacha — barcha kriptografiya tushunchalarini 
+            oddiy tilda, Python misollari bilan o'rganing.
+          </p>
+          <div style="display:flex; gap:.75rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+            {% for topic in ['Caesar', 'XOR', 'Base64', 'RSA', 'AES', 'Hashing', 'DH'] %}
+            <span class="badge badge-category">{{ topic }}</span>
+            {% endfor %}
+          </div>
+          <a href="{{ url_for('academy.index') }}" class="btn btn-outline">
+            Darslarni boshlash →
+          </a>
+        </div>
+        <div style="font-family:var(--mono); font-size:.8rem; color:var(--green);
+                    background:var(--bg-surface); border:1px solid var(--border);
+                    border-radius:var(--radius); padding:1.25rem; min-width:260px;">
+          <div style="color:var(--text-muted); margin-bottom:.75rem;"># Darslar ro'yxati</div>
+          <div>✓ Kriptografiyaga Kirish</div>
+          <div>✓ Base64 Encoding</div>
+          <div>✓ XOR Operatsiyasi</div>
+          <div>✓ Caesar Shifri</div>
+          <div>✓ Vigenère Shifri</div>
+          <div>✓ RSA Kriptografiyasi</div>
+          <div>✓ AES Shifri</div>
+          <div>✓ Hash Funksiyalari</div>
+          <div>✓ Diffie-Hellman</div>
+          <div>✓ Modular Arifmetika</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

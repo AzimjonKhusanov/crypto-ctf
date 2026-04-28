@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Profil — {{ current_user.username }}{% endblock %}
+{% block content %}
+<div class="container" style="max-width:900px;">
+  <div class="page-header">
+    <h1 class="page-title">👤 {{ current_user.username }}</h1>
+    <p class="page-subtitle">Shaxsiy profil va progress</p>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:2rem;">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:3rem; font-family:var(--mono); color:var(--green); font-weight:700;">
+        {{ current_user.score }}
+      </div>
+      <div style="color:var(--text-muted); font-size:.85rem;">Jami ball</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:3rem; font-family:var(--mono); color:var(--cyan); font-weight:700;">
+        {{ solved_challenges|length }}
+      </div>
+      <div style="color:var(--text-muted); font-size:.85rem;">Hal qilingan masalalar</div>
+    </div>
+  </div>
+
+  {% if solved_challenges %}
+  <div class="card" style="margin-bottom:2rem;">
+    <h3 style="color:var(--green); margin-bottom:1rem;">✅ Hal qilingan masalalar</h3>
+    <div class="challenges-grid">
+      {% for ch in solved_challenges %}
+      <a href="{{ url_for('challenges.challenge_detail', challenge_id=ch.id) }}"
+         class="challenge-card solved">
+        <div class="ch-header">
+          <span class="ch-title">{{ ch.title }}</span>
+          <span class="ch-points">{{ ch.points }}pt</span>
+        </div>
+        <div class="ch-meta">
+          <span class="badge badge-category">{{ ch.category }}</span>
+          <span class="badge badge-solved">✓</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if recent_submissions %}
+  <div class="card">
+    <h3 style="color:var(--cyan); margin-bottom:1rem;">📋 Oxirgi urinishlar</h3>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Masala</th><th>Urinish</th><th>Natija</th><th>Vaqt</th></tr>
+        </thead>
+        <tbody>
+          {% for sub in recent_submissions %}
+          <tr>
+            <td><a href="{{ url_for('challenges.challenge_detail', challenge_id=sub.challenge_id) }}">
+              {{ sub.challenge.title }}
+            </a></td>
+            <td style="font-family:var(--mono); font-size:.8rem; color:var(--text-muted);">
+              {{ sub.flag_attempt[:40] }}{% if sub.flag_attempt|length > 40 %}...{% endif %}
+            </td>
+            <td>
+              {% if sub.correct %}
+              <span style="color:var(--green);">✓ To'g'ri</span>
+              {% else %}
+              <span style="color:var(--red);">✗ Noto'g'ri</span>
+              {% endif %}
+            </td>
+            <td style="font-size:.78rem; color:var(--text-muted); font-family:var(--mono);">
+              {{ sub.submitted_at.strftime('%d.%m %H:%M') }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

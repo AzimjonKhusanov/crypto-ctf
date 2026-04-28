@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Academy — Kriptografiya Darslari{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">📚 Academy</h1>
+    <p class="page-subtitle">Kriptografiyani boshlang'ichdan o'rgan — Python misollari bilan</p>
+  </div>
+
+  {% for category, lessons in categories.items() %}
+  <section style="margin-bottom:2.5rem;">
+    <h2 style="font-size:1.1rem; font-weight:700; color:var(--cyan); margin-bottom:1rem;
+               display:flex; align-items:center; gap:.75rem;">
+      <span style="width:3px; height:20px; background:var(--cyan); border-radius:2px; display:inline-block;"></span>
+      {{ category }}
+    </h2>
+    <div style="display:flex; flex-direction:column; gap:.6rem;">
+      {% for lesson in lessons %}
+      <a href="{{ url_for('academy.lesson', slug=lesson.slug) }}"
+         style="display:flex; align-items:center; gap:1.25rem; padding:1rem 1.25rem;
+                background:var(--bg-card); border:1px solid var(--border);
+                border-radius:var(--radius-lg); color:inherit; text-decoration:none;
+                transition:all .2s;"
+         onmouseover="this.style.borderColor='var(--green)'; this.style.transform='translateX(4px)'"
+         onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateX(0)'">
+        <span style="font-family:var(--mono); font-size:.8rem; color:var(--text-muted); width:24px; text-align:right; flex-shrink:0;">
+          {{ lesson.order_num }}
+        </span>
+        <div style="flex:1;">
+          <div style="font-weight:700;">{{ lesson.title }}</div>
+        </div>
+        {% if lesson.difficulty == 'oson' %}
+          <span class="badge badge-easy">Oson</span>
+        {% elif lesson.difficulty == "o'rta" %}
+          <span class="badge badge-medium">O'rta</span>
+        {% else %}
+          <span class="badge badge-hard">Qiyin</span>
+        {% endif %}
+        <span style="color:var(--text-muted); font-size:.9rem;">→</span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}

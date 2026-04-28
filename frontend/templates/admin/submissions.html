@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Admin — Submissionlar{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">📊 Submissionlar</h1>
+    <p class="page-subtitle">{{ submissions|length }} ta oxirgi urinish</p>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Foydalanuvchi</th><th>Masala</th><th>Urinish</th><th>Natija</th><th>Vaqt</th></tr>
+        </thead>
+        <tbody>
+          {% for sub in submissions %}
+          <tr>
+            <td style="font-weight:600;">{{ sub.user.username }}</td>
+            <td style="font-size:.85rem;">{{ sub.challenge.title }}</td>
+            <td style="font-family:var(--mono); font-size:.78rem; color:var(--text-muted); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+              {{ sub.flag_attempt }}
+            </td>
+            <td>
+              {% if sub.correct %}
+              <span style="color:var(--green); font-weight:600;">✓ To'g'ri</span>
+              {% else %}
+              <span style="color:var(--red);">✗ Noto'g'ri</span>
+              {% endif %}
+            </td>
+            <td style="font-family:var(--mono); font-size:.78rem; color:var(--text-muted);">
+              {{ sub.submitted_at.strftime('%d.%m.%Y %H:%M') }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

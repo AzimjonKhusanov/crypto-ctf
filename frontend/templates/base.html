@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}NullCTF{% endblock %} — O'zbek Kriptografiya Platformasi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="{{ url_for('challenges.index') }}" class="nav-brand">
+      <span class="brand-null">NULL</span><span class="brand-ctf">CTF</span>
+      <span class="brand-cursor">_</span>
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('challenges.challenges_list') }}" class="nav-link {% if request.endpoint and 'challenge' in request.endpoint %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        Challengelar
+      </a>
+      <a href="{{ url_for('academy.index') }}" class="nav-link {% if request.endpoint and 'academy' in request.endpoint %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+        Academy
+      </a>
+      <a href="{{ url_for('writeups.index') }}" class="nav-link {% if request.endpoint and 'writeup' in request.endpoint %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        Writeuplar
+      </a>
+      <a href="{{ url_for('challenges.scoreboard') }}" class="nav-link {% if request.endpoint == 'challenges.scoreboard' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        Scoreboard
+      </a>
+    </div>
+    <div class="nav-auth">
+      {% if current_user.is_authenticated %}
+        {% if current_user.is_admin %}
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-sm btn-outline">⚙ Admin</a>
+        {% endif %}
+        <a href="{{ url_for('auth.profile') }}" class="user-badge">
+          <span class="user-name">{{ current_user.username }}</span>
+          <span class="user-score">{{ current_user.score }} ball</span>
+        </a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-ghost">Chiqish</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-ghost">Kirish</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-sm btn-primary">Ro'yxat</a>
+      {% endif %}
+    </div>
+    <button class="nav-toggle" id="navToggle">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── FLASH MESSAGES ────────────────────────────────────────── -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-container">
+    {% for category, message in messages %}
+    <div class="flash flash-{{ category }}">
+      {{ message }}
+      <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<!-- ── MAIN ──────────────────────────────────────────────────── -->
+<main class="main-content">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="brand-null">NULL</span><span class="brand-ctf">CTF</span>
+      <p>O'zbek tilida kriptografiya o'rganish platformasi</p>
+    </div>
+    <div class="footer-links">
+      <a href="{{ url_for('challenges.challenges_list') }}">Challengelar</a>
+      <a href="{{ url_for('academy.index') }}">Academy</a>
+      <a href="{{ url_for('writeups.index') }}">Writeuplar</a>
+      <a href="{{ url_for('api.get_stats') }}">API</a>
+    </div>
+    <div class="footer-copy">
+      <p>NULL{flag_seni_kutmoqda} &copy; 2024 NullCTF</p>
+    </div>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

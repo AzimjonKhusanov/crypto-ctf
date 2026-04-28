@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}{{ writeup.title }}{% endblock %}
+{% block content %}
+<div class="container" style="max-width:820px;">
+  <div style="margin: 2rem 0 1rem;">
+    <a href="{{ url_for('writeups.index') }}" style="color:var(--text-muted); font-size:.875rem;">
+      ← Writeuplarga qaytish
+    </a>
+  </div>
+
+  <div class="card">
+    <!-- Header -->
+    <div style="margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border);">
+      <h1 style="font-size:1.6rem; font-weight:800; margin-bottom:.75rem;">{{ writeup.title }}</h1>
+      <div style="display:flex; gap:.75rem; align-items:center; flex-wrap:wrap;">
+        <span class="badge badge-category">{{ writeup.challenge.category }}</span>
+        {% if writeup.challenge.difficulty == 'oson' %}
+          <span class="badge badge-easy">Oson</span>
+        {% elif writeup.challenge.difficulty == "o'rta" %}
+          <span class="badge badge-medium">O'rta</span>
+        {% else %}
+          <span class="badge badge-hard">Qiyin</span>
+        {% endif %}
+        <span style="color:var(--text-muted); font-size:.85rem;">
+          Masala: <a href="{{ url_for('challenges.challenge_detail', challenge_id=writeup.challenge_id) }}">
+            {{ writeup.challenge.title }}
+          </a>
+        </span>
+        <span style="color:var(--text-muted); font-size:.82rem; margin-left:auto; font-family:var(--mono);">
+          {{ writeup.author }} · {{ writeup.created_at.strftime('%d.%m.%Y') }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Content (Markdown rendered as HTML) -->
+    <div class="writeup-body">
+      {{ writeup.content | markdown_to_html | safe }}
+    </div>
+  </div>
+</div>
+{% endblock %}

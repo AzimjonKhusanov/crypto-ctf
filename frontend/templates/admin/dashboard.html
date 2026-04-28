@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">⚙ Admin Panel</h1>
+  </div>
+
+  <div class="admin-grid">
+    <div class="stat-card">
+      <div class="s-num">{{ stats.users }}</div>
+      <div class="s-label">Foydalanuvchilar</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-num">{{ stats.challenges }}</div>
+      <div class="s-label">Challengelar</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-num">{{ stats.correct }}</div>
+      <div class="s-label">To'g'ri yechimlar</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-num">{{ stats.writeups }}</div>
+      <div class="s-label">Writeuplar</div>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;">
+    <a href="{{ url_for('admin.challenges') }}" class="btn btn-outline">📋 Challengelar</a>
+    <a href="{{ url_for('admin.new_challenge') }}" class="btn btn-primary">+ Yangi Challenge</a>
+    <a href="{{ url_for('admin.users') }}" class="btn btn-ghost">👥 Foydalanuvchilar</a>
+    <a href="{{ url_for('admin.writeups') }}" class="btn btn-ghost">📄 Writeuplar</a>
+    <a href="{{ url_for('admin.submissions') }}" class="btn btn-ghost">📊 Submissionlar</a>
+  </div>
+
+  <div class="card">
+    <h3 style="color:var(--cyan); margin-bottom:1rem;">Oxirgi urinishlar</h3>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Foydalanuvchi</th><th>Masala</th><th>Natija</th><th>Vaqt</th></tr>
+        </thead>
+        <tbody>
+          {% for sub in recent_subs %}
+          <tr>
+            <td>{{ sub.user.username }}</td>
+            <td>{{ sub.challenge.title }}</td>
+            <td>{% if sub.correct %}<span style="color:var(--green);">✓</span>{% else %}<span style="color:var(--red);">✗</span>{% endif %}</td>
+            <td style="font-family:var(--mono); font-size:.78rem; color:var(--text-muted);">
+              {{ sub.submitted_at.strftime('%d.%m %H:%M') }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Admin — Challengelar{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <h1 class="page-title">Challengelar</h1>
+        <p class="page-subtitle">{{ challenges|length }} ta</p>
+      </div>
+      <a href="{{ url_for('admin.new_challenge') }}" class="btn btn-primary">+ Yangi</a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Nomi</th><th>Kategoriya</th><th>Qiyinlik</th><th>Ball</th><th>Yechimlar</th><th>Holat</th><th>Amal</th></tr>
+        </thead>
+        <tbody>
+          {% for ch in challenges %}
+          <tr>
+            <td style="font-weight:600;">{{ ch.title }}</td>
+            <td><span class="badge badge-category">{{ ch.category }}</span></td>
+            <td>
+              {% if ch.difficulty == 'oson' %}<span style="color:var(--green);">Oson</span>
+              {% elif ch.difficulty == "o'rta" %}<span style="color:var(--yellow);">O'rta</span>
+              {% else %}<span style="color:var(--red);">Qiyin</span>{% endif %}
+            </td>
+            <td style="font-family:var(--mono);">{{ ch.points }}</td>
+            <td style="font-family:var(--mono);">{{ ch.solve_count() }}</td>
+            <td>
+              {% if ch.is_active %}<span style="color:var(--green);">Faol</span>
+              {% else %}<span style="color:var(--text-muted);">Nofaol</span>{% endif %}
+            </td>
+            <td>
+              <div style="display:flex; gap:.5rem;">
+                <a href="{{ url_for('admin.edit_challenge', cid=ch.id) }}" class="btn btn-ghost btn-sm">✎</a>
+                <form method="POST" action="{{ url_for('admin.delete_challenge', cid=ch.id) }}" style="display:inline;">
+                  <button class="btn btn-danger btn-sm" type="submit"
+                          data-confirm="Haqiqatan o'chirishni xohlaysizmi?">✕</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

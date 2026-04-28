@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Kirish{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="auth-box">
+    <div style="text-align:center; margin-bottom:1.5rem;">
+      <div style="font-size:2rem; font-family:var(--mono);">
+        <span style="color:var(--green);">NULL</span><span style="color:var(--cyan);">CTF</span>
+      </div>
+    </div>
+    <h1 class="auth-title">Tizimga kirish</h1>
+    <p class="auth-sub">Hisob yo'qmi? <a href="{{ url_for('auth.register') }}">Ro'yxatdan o'ting</a></p>
+
+    <form method="POST">
+      <div class="form-group">
+        <label class="form-label">Foydalanuvchi nomi</label>
+        <input type="text" name="username" class="form-control" required autofocus
+               placeholder="username" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Parol</label>
+        <input type="password" name="password" class="form-control" required
+               placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Kirish</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

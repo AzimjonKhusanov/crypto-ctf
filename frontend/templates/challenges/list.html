@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Challengelar{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <h1 class="page-title">Challengelar</h1>
+        <p class="page-subtitle">
+          Jami <span id="challengeCount">{{ challenges|length }}</span> ta masala
+        </p>
+      </div>
+      {% if not current_user.is_authenticated %}
+      <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
+        Ro'yxatdan o'ting →
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- FILTERLAR -->
+  <div class="filter-bar">
+    <span style="font-size:.8rem; color:var(--text-muted); font-family:var(--mono);">Kategoriya:</span>
+    <button class="filter-btn {% if not selected_category %}active{% endif %}"
+            data-group="category" data-value="all">Barchasi</button>
+    {% for cat in categories %}
+    <button class="filter-btn {% if selected_category == cat %}active{% endif %}"
+            data-group="category" data-value="{{ cat }}">{{ cat }}</button>
+    {% endfor %}
+  </div>
+  <div class="filter-bar" style="margin-top:-.75rem;">
+    <span style="font-size:.8rem; color:var(--text-muted); font-family:var(--mono);">Qiyinlik:</span>
+    <button class="filter-btn {% if not selected_difficulty %}active{% endif %}"
+            data-group="difficulty" data-value="all">Barchasi</button>
+    <button class="filter-btn {% if selected_difficulty == 'oson' %}active{% endif %}"
+            data-group="difficulty" data-value="oson">🟢 Oson</button>
+    <button class="filter-btn {% if selected_difficulty == "o'rta" %}active{% endif %}"
+            data-group="difficulty" data-value="o'rta">🟡 O'rta</button>
+    <button class="filter-btn {% if selected_difficulty == 'qiyin' %}active{% endif %}"
+            data-group="difficulty" data-value="qiyin">🔴 Qiyin</button>
+  </div>
+
+  <!-- CHALLENGELAR -->
+  <div class="challenges-grid">
+    {% for ch in challenges %}
+    <a href="{{ url_for('challenges.challenge_detail', challenge_id=ch.id) }}"
+       class="challenge-card {% if ch.id in solved_ids %}solved{% endif %} animate-in"
+       data-category="{{ ch.category }}"
+       data-difficulty="{{ ch.difficulty }}">
+
+      <div class="ch-header">
+        <span class="ch-title">{{ ch.title }}</span>
+        <span class="ch-points">{{ ch.points }}pt</span>
+      </div>
+
+      <div class="ch-meta">
+        <span class="badge badge-category">{{ ch.category }}</span>
+        {% if ch.difficulty == 'oson' %}
+          <span class="badge badge-easy">Oson</span>
+        {% elif ch.difficulty == "o'rta" %}
+          <span class="badge badge-medium">O'rta</span>
+        {% else %}
+          <span class="badge badge-hard">Qiyin</span>
+        {% endif %}
+        {% if ch.id in solved_ids %}
+          <span class="badge badge-solved">✓ Hal qilindi</span>
+        {% endif %}
+      </div>
+
+      <div class="ch-solves">{{ ch.solve_count() }} ta o'yinchi hal qildi</div>
+    </a>
+    {% else %}
+    <div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:3rem;">
+      Hali challenge yo'q.
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// URL parametrlari orqali filter
+const params = new URLSearchParams(location.search);
+const cat  = params.get('category');
+const diff = params.get('difficulty');
+
+if (cat) {
+  document.querySelectorAll('[data-group="category"]').forEach(b => {
+    b.classList.toggle('active', b.dataset.value === cat);
+  });
+}
+if (diff) {
+  document.querySelectorAll('[data-group="difficulty"]').forEach(b => {
+    b.classList.toggle('active', b.dataset.value === diff);
+  });
+}
+
+// Filter tugmalarini URL bilan bog'lash
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const activeCat  = document.querySelector('[data-group="category"].active')?.dataset.value;
+    const activeDiff = document.querySelector('[data-group="difficulty"].active')?.dataset.value;
+    const url = new URL(location.href);
+    if (activeCat  && activeCat  !== 'all') url.searchParams.set('category',   activeCat);
+    else url.searchParams.delete('category');
+    if (activeDiff && activeDiff !== 'all') url.searchParams.set('difficulty', activeDiff);
+    else url.searchParams.delete('difficulty');
+    history.replaceState({}, '', url);
+  });
+});
+</script>
+{% endblock %}
