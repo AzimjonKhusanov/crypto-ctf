@@ -60,12 +60,13 @@ def create_app(config=None):
 
     # ── Bazani yaratish va seed data qo'shish ───────────────────────────────
     with app.app_context():
-    	db.create_all()
+    	from sqlalchemy import inspect
 
-    # faqat DB bo'sh bo'lsa seed qilamiz
-    	from .models.database import User
+    	inspector = inspect(db.engine)
 
-    	if User.query.count() == 0:
+    # Agar users table yo‘q bo‘lsa — yaratamiz
+    	if not inspector.has_table("users"):
+        	db.create_all()
         	init_db(app)
 
     return app
